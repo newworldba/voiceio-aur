@@ -1,0 +1,27 @@
+pkgbase = voiceio
+	pkgdesc = Local voice dictation for Linux: speak, and the text appears at your cursor
+	pkgver = 1.15.1
+	pkgrel = 1
+	url = https://voiceio.dev/
+	arch = x86_64
+	license = MIT
+	makedepends = uv
+	depends = ibus
+	depends = python-gobject
+	depends = portaudio
+	optdepends = libayatana-appindicator: tray icon
+	optdepends = wl-clipboard: clipboard on Wayland
+	optdepends = xclip: clipboard on X11, selected-text vocabulary
+	optdepends = libnotify: desktop notifications
+	optdepends = wtype: typing fallback on wlroots compositors
+	optdepends = ydotool: typing fallback on any Wayland compositor
+	optdepends = xdotool: typing fallback on X11
+	noextract = python_voiceio-1.15.1-py3-none-any.whl
+	options = !strip
+	options = !debug
+	source = https://files.pythonhosted.org/packages/py3/p/python-voiceio/python_voiceio-1.15.1-py3-none-any.whl
+	source = build-bundle.sh
+	sha256sums = edf3421bd53ac51eb1d3b13bf4c8b9f8e58982f6ce35038d53c223a45b1a557c
+	sha256sums = 72c0cf73afdd409266b3f98ecab7823a5f14f2215d7ca44ff45fa8f3af895660
+
+pkgname = voiceio

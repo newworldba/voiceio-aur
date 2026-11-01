@@ -1,0 +1,48 @@
+# Maintainer: Hugo Montenegro <h@hugo0.com>
+#
+# Bundles its own CPython and Python dependencies in /usr/lib/voiceio (see
+# build-bundle.sh for why): faster-whisper, ctranslate2, tokenizers and
+# wordfreq are not in the Arch repos, and a venv on the system python would
+# break on every python upgrade. The system python is used only for the IBus
+# engine and the tray icon (python-gobject).
+#
+# Updated by packaging/aur/update.sh in github.com/Hugo0/voiceio; edit there.
+
+pkgname=voiceio
+_name=python_voiceio
+pkgver=1.15.1
+pkgrel=1
+pkgdesc="Local voice dictation for Linux: speak, and the text appears at your cursor"
+arch=('x86_64')
+url="https://voiceio.dev/"
+license=('MIT')
+depends=('ibus' 'python-gobject' 'portaudio')
+makedepends=('uv')
+optdepends=(
+  'libayatana-appindicator: tray icon'
+  'wl-clipboard: clipboard on Wayland'
+  'xclip: clipboard on X11, selected-text vocabulary'
+  'libnotify: desktop notifications'
+  'wtype: typing fallback on wlroots compositors'
+  'ydotool: typing fallback on any Wayland compositor'
+  'xdotool: typing fallback on X11'
+)
+# Prebuilt wheels: stripping can corrupt their patchelf-ed libraries.
+options=('!strip' '!debug')
+source=("https://files.pythonhosted.org/packages/py3/${_name::1}/python-voiceio/${_name}-${pkgver}-py3-none-any.whl"
+        "build-bundle.sh")
+noextract=("${_name}-${pkgver}-py3-none-any.whl")
+sha256sums=('edf3421bd53ac51eb1d3b13bf4c8b9f8e58982f6ce35038d53c223a45b1a557c'
+            '72c0cf73afdd409266b3f98ecab7823a5f14f2215d7ca44ff45fa8f3af895660')
+
+build() {
+  # Fetches CPython and the Python dependencies from PyPI.
+  UV_CACHE_DIR="$srcdir/uv-cache" \
+    bash "$srcdir/build-bundle.sh" "$srcdir/root" "$srcdir/${_name}-${pkgver}-py3-none-any.whl" aur
+}
+
+package() {
+  cp -a "$srcdir/root/." "$pkgdir/"
+  install -Dm644 "$pkgdir"/usr/lib/voiceio/lib/python3.*/site-packages/${_name}-${pkgver}.dist-info/licenses/LICENSE \
+    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
